@@ -15,7 +15,11 @@ contract DaoRegistry {
         _;
     }
 
-    function reisterUser(address _user) external {
+    constructor() {
+        admins[msg.sender] = true;
+    }
+
+    function registerUser(address _user) external {
         require(address(_user) != address(0), "Invalid address");
         require(!registeredUsers[_user], "User already registered");
         registeredUsers[_user] = true;
@@ -33,5 +37,17 @@ contract DaoRegistry {
 
     function isRegistered(address _user) external view returns (bool) {
         return registeredUsers[_user];
+    }
+
+    function isAdmin(address _user) external view returns (bool) {
+        return admins[_user];
+    }
+
+    function grantAdminRole(address userAddress) external onlyAdmin {
+        admins[userAddress] = true;
+    }
+
+    function revokeAdminRole(address userAddress) external onlyAdmin {
+        admins[userAddress] = false;
     }
 }
